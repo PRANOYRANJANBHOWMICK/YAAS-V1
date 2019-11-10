@@ -1,0 +1,96 @@
+{% extends 'includes/base.html' %}
+
+{% block content %}
+    <div id="login-page" class="row">
+        <div class="col s12 z-depth-4 card-panel">
+            <form action="" class="login-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="input-field col s12 center">
+                        {% if data.language == "Eng" %}
+                            <h4>Change Email</h4>
+                            <p class="center">Join to our community now !</p>
+                        {% else %}
+                            <h4>Muuttaa Sähköposti</h4>
+                            <p class="center">Liity yhteisömme nyt!</p>
+                        {% endif %}
+                        <p class="center">
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <strong style="color: red">{{ message.message }}</strong>
+                                {% endfor %}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div class="row margin">
+                    <div class="input-field col s12">
+                        <i class="mdi-action-lock-outline prefix"></i>
+                        <input id="email-1" value="{{ email }}" name="current" type="email" required>
+                        <label for="email-1" class="center-align">
+                            {% if data.language == "Eng" %}
+                                Current Email
+                            {% else %}
+                                Nykyinen Sähköposti
+                            {% endif %}
+                        </label>
+                    </div>
+                </div>
+                <div class="row margin">
+                    <div class="input-field col s12">
+                        <i class="mdi-action-lock-outline prefix"></i>
+                        <input id="email-2" name="new" type="email" required>
+                        <label for="email-2" class="center-align">
+                            {% if data.language == "Eng" %}
+                                New Email
+                            {% else %}
+                                Uusi Sähköposti
+                            {% endif %}
+                        </label>
+                    </div>
+                </div>
+                <div class="row margin">
+                    <div class="input-field col s12">
+                        <i class="mdi-action-lock-outline prefix"></i>
+                        <input id="password" name="password" type="password" required>
+                        <label for="password">
+                            {% if data.language == "Eng" %}
+                                Password
+                            {% else %}
+                                Salasana
+                            {% endif %}
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <button class="btn waves-effect waves-light col s12">
+                            {% if data.language == "Eng" %}
+                                Change
+                            {% else %}
+                                Muuttaa
+                            {% endif %}
+                        </button>
+                    </div>
+                    <div class="input-field col s12">
+                        <p class="margin center medium-small sign-up">
+                            {% if data.language == "Eng" %}
+                                Discard Change ?
+                            {% else %}
+                                Hylätä Muuttaa
+                            {% endif %}
+                            <a
+                                    href="{% url 'account:index' %}">
+                                {% if data.language == "Eng" %}
+                                    Home
+                                {% else %}
+                                    Koti
+                                {% endif %}
+                            </a></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

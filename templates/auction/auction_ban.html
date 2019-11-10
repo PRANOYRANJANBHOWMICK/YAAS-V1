@@ -1,0 +1,124 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <div class="section">
+            <p class="caption">
+                {% if data.language == "Eng" %}
+                    Selected Auction
+                {% else %}
+                    Valittu huutokauppa
+                {% endif %}
+            </p>
+            <span style="float: right">
+                <a class="btn waves-effect waves-light grey" href="{% url 'auction:banned_auctions_list' %}">
+                    {% if data.language == "Eng" %}
+                        Browse Banned Auctions
+                    {% else %}
+                        Selaa kiellettyjä huutokauppoja
+                    {% endif %}
+                    <i class="mdi-action-open-in-browser left"></i></a>
+            </span>
+            <div class="divider"></div>
+            <div>
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.level_tag == 'error' %}
+                            <div id="card-alert" class="card red lighten-5">
+                                <div class="card-content red-text">
+                                    <p><strong>{{ message.message }}</strong></p>
+                                </div>
+                            </div>
+                        {% elif message.level_tag == 'success' %}
+                            <div id="card-alert" class="card green lighten-5">
+                                <div class="card-content green-text">
+                                    <p>{{ message.message }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div id="icon-prefixes" class="section">
+                <h4 class="header">
+                    {% if data.language == "Eng" %}
+                        Auction Details
+                    {% else %}
+                        Huutokaupan yksityiskohdat
+                    {% endif %}
+                </h4>
+                <div class="row">
+                    <div class="col s12 m4 l3">
+                        <p>
+                            {% if data.language == "Eng" %}
+                                Title - {{ auc_obj.title }}<br>
+                                Description - {{ auc_obj.description }}<br>
+                                Starting Price - {{ auc_obj.min_price }} €<br>
+                                Deadline - {{ auc_obj.deadline }}<br>
+                            {% else %}
+                                Otsikko - {{ auc_obj.title }}<br>
+                                Kuvaus - {{ auc_obj.description }}<br>
+                                Aloitushinta - {{ auc_obj.min_price }} €<br>
+                                Takaraja - {{ auc_obj.deadline }}<br>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col s12 m8 l9">
+                        <div class="row">
+                            <form action="" class="col s12" method="post" enctype="multipart/form-data" id="ban_form">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <button class="btn waves-effect waves-light red" type="submit"
+                                                name="action">
+                                            {% if data.language == "Eng" %}
+                                                Ban
+                                            {% else %}
+                                                Kielto
+                                            {% endif %}
+                                            <i class="mdi-content-block right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static '' %}js/others/jquery-3.2.1.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#ban_form").submit(function (event) {
+                event.preventDefault();
+                confirmMessage();
+            });
+        });
+
+        function confirmMessage() {
+            swal({
+                    title: "Auction Ban",
+                    text: "Are you sure want to ban that auction?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function (isConfirm) {
+                    if (!(isConfirm)) {
+                        swal("Operation cancelled.", "Item is active");
+                    } else {
+                        $("#ban_form").unbind('submit').submit();
+                    }
+                });
+        }
+    </script>
+
+{% endblock %}
